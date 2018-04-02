@@ -17,9 +17,10 @@ Prompter.monoline( function( result ){
 //Tools.clearScreen();
 //
 //
-var config = new Config( )
+var config = new Config();
+
 config.onWorkingDirFetched( function(){
- console.log('this is the wd ' + config.getWorkingDir());
+ console.log( config.getConfigData() );
 });
 
 config.fetchWorkingDir()

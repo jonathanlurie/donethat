@@ -15,15 +15,19 @@ class Config {
     this._configFilePath = path.resolve( homedir(), process.env.CONFIG_FILE );
     this._workingDir = null;
     this._cbOnWorkingDirFetched = null;
+    this._configData = { workingDir: null }
   }
 
+
+  /**
+   * Fetch the working dir, either by reading the config file (if it exists) or
+   * by asking the user to type if in a prompt.
+   */
   fetchWorkingDir( ){
     let workingDir = null;
 
     if( fs.existsSync( this._configFilePath ) ){
-      let config = jsonfile.readFileSync( this._configFilePath );
-      console.log( config );
-      this._workingDir = config.workingDir;
+      this._configData = jsonfile.readFileSync( this._configFilePath );
       this._cbOnWorkingDirFetched()
       return;
     }
@@ -36,17 +40,20 @@ class Config {
   }
 
 
+  /**
+   * [PRIVATE]
+   * Displays a prompt so that the user can type the path of the working directory.
+   * This is supposed to happen only if the config file was not found
+   * @param  {Function} cbDone - callback for when the user is done typing
+   */
   _askForWorkingFolder( cbDone ){
     let that = this;
     Prompter.monoline( function( result ){
       if(fs.existsSync( result )){
         trials = 0;
         that._workingDir = result;
-        var config = {
-          workingDir: result
-        }
-
-        jsonfile.writeFileSync( that._configFilePath, config )
+        that._configData.workingDir = result
+        that._writeConfigData()
         cbDone( result )
       }else{
         trials ++;
@@ -61,12 +68,29 @@ class Config {
   }
 
 
-  getWorkingDir(){
-    return this._workingDir;
+  /**
+   * Get the path to the working directory
+   * @return {String} the path
+   */
+  getConfigData(){
+    return this._configData;
   }
 
+
+  /**
+   * Specify the callback for when the path to the working directpry is fetched
+   * @param  {Function} cb - the callback
+   */
   onWorkingDirFetched( cb ) {
     this._cbOnWorkingDirFetched = cb;
+  }
+
+
+  /**
+   * Write the configData object on disc
+   */
+  _writeConfigData(){
+    jsonfile.writeFileSync( this._configFilePath, this._configData )
   }
 
 }
