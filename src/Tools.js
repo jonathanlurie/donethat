@@ -20,12 +20,12 @@ class Tools {
         let location = geo.city + ", " + geo.region + ", " + geo.country;
         callbackDone( location );
       }else{
-        callbackDone( null );
+        callbackDone( '' );
       }
 
     })
     .catch( function( err ){
-      callbackDone( null );
+      callbackDone( '' );
     }) ;
   }
 

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const jsonfile = require('jsonfile')
+const jsonfile = require('jsonfile');
 require('dotenv').config();
 const homedir = require('homedir');
 const Prompter = require("./Prompter.js");
@@ -13,7 +13,6 @@ class Config {
 
   constructor( ){
     this._configFilePath = path.resolve( homedir(), process.env.CONFIG_FILE );
-    this._workingDir = null;
     this._cbOnWorkingDirFetched = null;
     this._configData = { workingDir: null }
   }
