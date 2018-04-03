@@ -11,8 +11,7 @@ class Prompter {
 
     let lines = [];
 
-    process.stdout.write(`${promptStr}» type '${exitStr}' on a new line to validate\n`);
-
+    process.stdout.write(`» type '${exitStr}' on a new line to validate\n`);
     rl.prompt();
 
     rl.on('line', function(line){
@@ -26,7 +25,6 @@ class Prompter {
       if( cleanLine.length !== 0){
         lines.push( cleanLine );
       }
-
 
       rl.prompt();
     });

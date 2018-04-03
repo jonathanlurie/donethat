@@ -1,3 +1,4 @@
+
 const Logger = require('./Logger.js');
 
 function createNewEntry( configData ){

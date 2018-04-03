@@ -27,7 +27,7 @@ class Config {
 
     if( fs.existsSync( this._configFilePath ) ){
       this._configData = jsonfile.readFileSync( this._configFilePath );
-      this._cbOnWorkingDirFetched()
+      this._cbOnWorkingDirFetched();
       return;
     }
 
@@ -51,7 +51,8 @@ class Config {
       if(fs.existsSync( result )){
         trials = 0;
         that._workingDir = result;
-        that._configData.workingDir = result
+        that._configData.workingDir = result;
+        that._configData.tagFile = "tags.json";
         that._writeConfigData()
         cbDone( result )
       }else{
@@ -90,6 +91,12 @@ class Config {
    */
   _writeConfigData(){
     jsonfile.writeFileSync( this._configFilePath, this._configData )
+
+    let tagFilePath = path.resolve( this._configData.workingDir, this._configData.tagFile);
+    if( !fs.existsSync( tagFilePath ) ){
+      jsonfile.writeFileSync( tagFilePath, {} )
+    }
+
   }
 
 }

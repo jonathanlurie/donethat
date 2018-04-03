@@ -31,12 +31,10 @@ class Logger {
                             .filter(function(t){ return (t.length > 0)})
         }
 
-
         Tools.getLocation( function( place ){
           that._saveNewEntry( myDay, cleanTags, new Date(), place );
           cbDone( null );
         })
-
 
       })
     })
@@ -44,17 +42,29 @@ class Logger {
   }
 
 
+  /**
+   * Saves a new entry and sync the tag file
+   * @param  {String} message - the message (from prompt)
+   * @param  {Array} tags - list of tags
+   * @param  {Date} date - a date object
+   * @param  {String} place - a place
+   */
   _saveNewEntry( message, tags, date, place ){
-    let folder = path.resolve(
-      this._configData.workingDir,
-      date.getFullYear().toString(),
-      (date.getMonth()+1).toString(),
+    let folderRelativeToWorkingDir = "." + path.sep +
+      date.getFullYear().toString() + path.sep +
+      (date.getMonth()+1).toString() + path.sep +
       date.getDate().toString()
+
+    let folderAbsolute = path.resolve(
+      this._configData.workingDir,
+      folderRelativeToWorkingDir
     )
-    mkdirp.sync( folder );
+
+    mkdirp.sync( folderAbsolute );
 
     let filename = (+date) + ".json";
-    let fullPath = path.resolve( folder, filename );
+    let fullPath = path.resolve( folderAbsolute, filename );
+    let relativePath =  folderRelativeToWorkingDir + path.sep + filename;
 
     let entry = {
       message: message,
@@ -63,9 +73,21 @@ class Logger {
       place: place
     }
 
+    // write the message
     jsonfile.writeFileSync( fullPath, entry )
 
     // TODO: add the file path to the tag file
+    let tagFilePath = path.resolve( this._configData.workingDir, this._configData.tagFile);
+    let allTags = jsonfile.readFileSync( tagFilePath );
+
+    for(let i=0; i<tags.length; i++){
+      if(!(tags[i] in allTags))
+        allTags[ tags[i] ] = [];
+
+      allTags[ tags[i] ].push( relativePath )
+    }
+
+    jsonfile.writeFileSync( tagFilePath, allTags );
   }
 
 }

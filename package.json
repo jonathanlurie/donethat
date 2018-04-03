@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "donethat": "./bin/donethatbin.js" 
+  }
   "author": "Jonathan Lurie",
   "license": "MIT",
   "dependencies": {
