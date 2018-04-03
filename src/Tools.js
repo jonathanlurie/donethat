@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
 const publicIp = require('public-ip');
 const geoip = require('geoip-lite');
 

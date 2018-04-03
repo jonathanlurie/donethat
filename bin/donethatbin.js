@@ -11,11 +11,13 @@ var config = new Config();
 function printHelp(){
   let help = `
   You can use the following options:
-
-    --last=n    to print the history of last 'n' days.
-    --help      to print this help
+    no argument --> Add a new record
+    --last=n    --> to print the history of last 'n' days.
+    --help      --> to print this help
 
   `
+
+  console.log( help );
 }
 
 config.onWorkingDirFetched( function(){
@@ -40,7 +42,7 @@ config.onWorkingDirFetched( function(){
     }
 
 
-    // print th ehekp menu
+    // print the help menu
     try{
       var helpVal = argParser.getArgValue("help");
       if( helpVal ){
@@ -48,7 +50,9 @@ config.onWorkingDirFetched( function(){
         printHelp();
         process.exit()
       }
-    }catch(e){}
+    }catch(e){
+      console.log( e );
+    }
 
 
     if( !didSomething ){

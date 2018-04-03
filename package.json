@@ -13,7 +13,6 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.3.2",
-    "dotenv": "^5.0.1",
     "geoip-lite": "^1.2.1",
     "glob": "^7.1.2",
     "homedir": "^0.6.0",
