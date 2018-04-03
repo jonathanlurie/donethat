@@ -51,6 +51,7 @@ class Logger {
    */
   _saveNewEntry( message, tags, date, place ){
     let folderRelativeToWorkingDir = "." + path.sep +
+      "logs" + path.sep +
       date.getFullYear().toString() + path.sep +
       (date.getMonth()+1).toString() + path.sep +
       date.getDate().toString()
@@ -62,6 +63,7 @@ class Logger {
 
     mkdirp.sync( folderAbsolute );
 
+    //let filename = Tools.getLocalTimestampFromDate(date) + ".json";
     let filename = (+date) + ".json";
     let fullPath = path.resolve( folderAbsolute, filename );
     let relativePath =  folderRelativeToWorkingDir + path.sep + filename;
@@ -69,14 +71,13 @@ class Logger {
     let entry = {
       message: message,
       tags: tags,
-      date: date.toISOString(),
+      date: date.toString(),
       place: place
     }
 
     // write the message
     jsonfile.writeFileSync( fullPath, entry )
 
-    // TODO: add the file path to the tag file
     let tagFilePath = path.resolve( this._configData.workingDir, this._configData.tagFile);
     let allTags = jsonfile.readFileSync( tagFilePath );
 

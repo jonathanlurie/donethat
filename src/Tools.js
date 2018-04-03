@@ -30,6 +30,16 @@ class Tools {
   }
 
 
+  /**
+   * Get the timestamp as if it was in the local timezone, otherwise,
+   * a date converted into timestamp cannot convert back into the original date.
+   * @param  {[type]} d [description]
+   * @return {[type]}   [description]
+   */
+  static getLocalTimestampFromDate( d ){
+    return (d.getTime() - (d.getTimezoneOffset() * 60000));
+  }
+
 }
 
 

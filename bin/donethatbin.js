@@ -33,9 +33,11 @@ config.onWorkingDirFetched( function(){
     try{
       let lastNDays = argParser.getArgValue("last");
       didSomething = true;
-
-      console.log("printing the last", lastNDays, "last days.");
-    }catch( e ){}
+      const printLastEntries = require("../src/_task_printLastEntries.js");
+      printLastEntries( config.getConfigData(), lastNDays );
+    }catch( e ){
+      console.error( e );
+    }
 
 
     // print th ehekp menu
