@@ -1,7 +1,7 @@
 {
   "name": "donethat",
   "version": "1.0.0",
-  "description": "Write what you have done today.",
+  "description": "Activity logger from the terminal, with tags, date and automatic location",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

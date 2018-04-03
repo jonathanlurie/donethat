@@ -38,7 +38,7 @@ config.onWorkingDirFetched( function(){
       const printLastEntries = require("../src/_task_printLastEntries.js");
       printLastEntries( config.getConfigData(), lastNDays );
     }catch( e ){
-      console.error( e );
+      //console.error( e );
     }
 
 
@@ -51,7 +51,7 @@ config.onWorkingDirFetched( function(){
         process.exit()
       }
     }catch(e){
-      console.log( e );
+      //console.log( e );
     }
 
 
