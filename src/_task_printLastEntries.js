@@ -19,10 +19,18 @@ function printLastEntries( configData, howManyDays ){
   let logGlobPath = configData.workingDir + path.sep + 'logs' + path.sep + '**' + path.sep + '*.json';
   let allLogs = glob.sync( logGlobPath );
 
-
+  // keeping only the ones since the given date
   let logsToKeep = allLogs.filter( function( logPath ){
     let timestamp = parseInt(path.basename( logPath, '.json' ));
     return timestamp >= timestampFromNdaysAgo;
+  })
+
+
+  // sorting older on top
+  logsToKeep.sort( function(pathA, pathB){
+    let timestampA = parseInt(path.basename( pathA, '.json' ));
+    let timestampB = parseInt(path.basename( pathB, '.json' ));
+    return timestampA > timestampB;
   })
 
   var logList = logsToKeep.map(function( logPath ){

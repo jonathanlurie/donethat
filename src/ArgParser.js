@@ -33,6 +33,7 @@ class ArgParser {
 
 
   static _castValue( value ){
+    console.log(">>>", value );
     if( value === undefined ){
       return true;
     }
@@ -45,7 +46,10 @@ class ArgParser {
       return true;
     }
 
+    // TODO check if a date!!
+
     var numberVal = parseFloat( value, 10 );
+    console.log(">>>", numberVal );
 
     if( isNaN(numberVal) ){
       return value;
