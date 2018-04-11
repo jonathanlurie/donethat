@@ -1,6 +1,6 @@
 {
   "name": "donethat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Activity logger from the terminal, with tags, date and automatic location",
   "main": "index.js",
   "scripts": {
