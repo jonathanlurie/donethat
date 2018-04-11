@@ -45,6 +45,14 @@ class ArgParser {
   }
 
 
+  static filterFloat(value) {
+    if (/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/
+      .test(value))
+      return Number(value);
+    return NaN;
+  }
+
+
   static _castValue( value ){
 
     if( value === undefined ){
@@ -59,17 +67,18 @@ class ArgParser {
       return true;
     }
 
+    // check if it's a number
+    var numberVal = ArgParser.filterFloat( value, 10 );
+    if( !isNaN(numberVal) )
+      return numberVal;
+
+    // checks if it's a data
     var aDate = new Date( value );
     if( !isNaN(aDate.getTime()))
       return aDate;
 
-    var numberVal = parseFloat( value, 10 );
-
-    if( isNaN(numberVal) ){
-      return value;
-    }else{
-      return numberVal;
-    }
+    // then it's probably just a string
+    return value;
   }
 
 
