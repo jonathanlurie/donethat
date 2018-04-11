@@ -28,6 +28,7 @@ function printHelp(){
     If no --end date is provided, now is chosen
     If no --start is provided, the oldest date available is chosen
 
+    Bug or issues: https://github.com/jonathanlurie/donethat
   `
 
   console.log( help );

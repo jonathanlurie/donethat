@@ -5,6 +5,8 @@ const jsonfile = require('jsonfile');
 const Tools = require('./Tools.js');
 const Prompter = require('./Prompter.js');
 
+let blackSeparator = new Array( process.stdout.columns + 1).join('█');
+let thinSeparator = new Array( process.stdout.columns + 1).join('─');
 
 class Logger {
   constructor( configData ){
@@ -15,6 +17,9 @@ class Logger {
   startNewEntry( cbDone ){
     let that = this;
     Tools.clearScreen();
+    console.log(blackSeparator);
+    console.log(Tools.getHeader());
+    console.log(thinSeparator);
     console.log("Hello, what did you do today?");
     Prompter.multiline( function( myDay ){
 
