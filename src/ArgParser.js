@@ -6,6 +6,7 @@ class ArgParser {
 
     this._parsedArgs = {}
     this._appName = path.basename( process.argv[1] );
+    this._hasCorruptedArgument = false;
     this._parseArgs();
   }
 
@@ -13,7 +14,7 @@ class ArgParser {
   _parseArgs(){
     // reinit the thing
     this._parsedArgs = {};
-    var rgx = /([-]+)([a-zA-Z]+)(=(\S+))?/;
+    var rgx = /([-]+)([a-zA-Z]+)(=)?(\S+)?/;
 
     var argz = process.argv
 
@@ -23,9 +24,21 @@ class ArgParser {
 
         if( match ){
           var argName = match[2]; // group 2
-          var argValue = ArgParser._castValue( match[4] )  // group 4
-          this._parsedArgs[ argName ] = argValue;
-          //console.log( argName);
+
+          // arg is just --something but not with "=value"
+          if( match[3] === undefined && match[4] === undefined ){
+            this._parsedArgs[ argName ] = true;
+
+          // arg is --something=value
+          }else if( match[3] !== undefined && match[4] !== undefined){
+            var argValue = ArgParser._castValue( match[4] )  // group 4
+            this._parsedArgs[ argName ] = argValue;
+
+          // arg is like --something1234 or --something= but no value --> nonsens
+          }else{
+            this._hasCorruptedArgument = true;
+          }
+
         }
 
     }
@@ -33,7 +46,7 @@ class ArgParser {
 
 
   static _castValue( value ){
-    console.log(">>>", value );
+
     if( value === undefined ){
       return true;
     }
@@ -46,10 +59,11 @@ class ArgParser {
       return true;
     }
 
-    // TODO check if a date!!
+    var aDate = new Date( value );
+    if( !isNaN(aDate.getTime()))
+      return aDate;
 
     var numberVal = parseFloat( value, 10 );
-    console.log(">>>", numberVal );
 
     if( isNaN(numberVal) ){
       return value;
@@ -63,7 +77,10 @@ class ArgParser {
     if( argName in this._parsedArgs){
       return this._parsedArgs[argName];
     }else{
-      throw "The argument --" + argName + " is missing."
+      throw {
+        message: "The argument --" + argName + " is missing.",
+        stillOk: true
+      }
     }
   }
 
@@ -75,6 +92,11 @@ class ArgParser {
 
   getNumberOfArgs(){
     return Object.keys( this._parsedArgs ).length;
+  }
+
+
+  hasCorruptedArgument(){
+    return this._hasCorruptedArgument;
   }
 }
 

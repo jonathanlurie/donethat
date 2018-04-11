@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
-var ArgParser = require("../src/ArgParser");
+const ArgParser = require("../src/ArgParser");
 var argParser = new ArgParser();
+
 
 const Config = require("../src/Config.js");
 var config = new Config();
 
 const EntrySelector = require('../src/EntrySelector.js');
+const EntryPrinter = require("../src/EntryPrinter.js");
 
 
 function printHelp(){
@@ -16,12 +18,15 @@ function printHelp(){
 
     --all               print all the entries (oldest to newest)
     --tags=tag1,tag2    print entries with at least one of these tags (coma separated)
-    --last=n            print the entries that no older than 'n' days
-    --start=mm/dd/yyyy  a starting date
-    --end=mm/dd/yyyy a ending date
-    --location=paris
+    --last=n            print the entries no older than 'n' days ago
+    --start=mm/dd/yyyy  print entries since since date
+    --end=mm/dd/yyyy    print entries up to this date
+    --location=paris    print entries with a match of word for location
+    --help              print this help menu
 
-    --help      --> to print this help
+    The different options can be combined.
+    If no --end date is provided, now is chosen
+    If no --start is provided, the oldest date available is chosen
 
   `
 
@@ -30,6 +35,12 @@ function printHelp(){
 
 config.onWorkingDirFetched( function(){
  //console.log( config.getConfigData() );
+
+  if( argParser.hasCorruptedArgument() ){
+    console.log("WARN: some argument are not in the expected format");
+    printHelp();
+    process.exit();
+  }
 
   // when no args, just launch the normal 'donethat' logger
   if( argParser.getNumberOfArgs() === 0 ){
@@ -46,7 +57,10 @@ config.onWorkingDirFetched( function(){
         process.exit();
       }
     }catch( e ){
-      console.error( e );
+      if( !("stillOk" in e) ){
+        console.error( e );
+      }
+
     }
 
 
@@ -57,7 +71,9 @@ config.onWorkingDirFetched( function(){
       let all = argParser.getArgValue("all");
       somethingToPrint = true;
     }catch( e ){
-      console.error( e );
+      if( !("stillOk" in e) ){
+        console.error( e );
+      }
     }
 
     // --tags
@@ -66,7 +82,9 @@ config.onWorkingDirFetched( function(){
       entrySelector.withComaSeparatedTags( tags );
       somethingToPrint = true;
     }catch( e ){
-      console.error( e );
+      if( !("stillOk" in e) ){
+        console.error( e );
+      }
     }
 
     // --last
@@ -75,37 +93,53 @@ config.onWorkingDirFetched( function(){
       entrySelector.theLastNDays( last );
       somethingToPrint = true;
     }catch( e ){
-      console.error( e );
+      if( !("stillOk" in e) ){
+        console.error( e );
+      }
     }
 
 
 
     // --start
     try{
-      let start = argParser.getArgValue("start");
-      let startDate = new Date(start);
-      console.log( startDate.toString());
-      if(isNaN( startDate.getTime() )){
+      let startDate = argParser.getArgValue("start");
+
+      if(!(startDate instanceof Date)){
         let msg = "ERROR: he start date format is invalid";
         console.warn(msg);
         throw msg
       }
-      entrySelector.starting( start );
+      console.log("correct date", startDate.toString());
+
+      entrySelector.starting( startDate );
       somethingToPrint = true;
     }catch( e ){
-      console.error( e );
+      if( !("stillOk" in e) ){
+        console.error( e );
+      }
     }
 
 
 
     // --end
     try{
-      let end = argParser.getArgValue("end");
-      entrySelector.ending( start );
+      let endDate = argParser.getArgValue("end");
+
+      if(!(endDate instanceof Date)){
+        let msg = "ERROR: he end date format is invalid";
+        console.warn(msg);
+        throw msg
+      }
+      console.log("correct date", endDate.toString());
+
+      entrySelector.ending( endDate );
       somethingToPrint = true;
     }catch( e ){
-      console.error( e );
+      if( !("stillOk" in e) ){
+        console.error( e );
+      }
     }
+
 
     // --location
     try{
@@ -113,14 +147,18 @@ config.onWorkingDirFetched( function(){
       entrySelector.atLocation( location );
       somethingToPrint = true;
     }catch( e ){
-      console.error( e );
+      if( !("stillOk" in e) ){
+        console.error( e );
+      }
     }
 
     if( somethingToPrint ){
       entrySelector.runQuery();
       let selectedEntries = entrySelector.getResult();
 
-      console.log( selectedEntries );
+      EntryPrinter.print( selectedEntries )
+
+      //console.log( selectedEntries );
     }else{
       printHelp();
       process.exit();

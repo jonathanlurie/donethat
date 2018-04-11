@@ -37,9 +37,7 @@ function printLastEntries( configData, howManyDays ){
     return jsonfile.readFileSync( logPath );
   })
 
-  let thinSeparator = new Array( process.stdout.columns + 1).join('─');
-  let thickSeparator = new Array( process.stdout.columns + 1).join('═');
-  let blackSeparator = new Array( process.stdout.columns + 1).join('█');
+  
 
 
   logList.forEach( function(entry, index){
@@ -49,7 +47,6 @@ function printLastEntries( configData, howManyDays ){
     console.log(thinSeparator);
     console.log(entry.message);
     console.log();
-
   })
   console.log( blackSeparator );
   //console.log( logList );
