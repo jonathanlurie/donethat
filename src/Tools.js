@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const publicIp = require('public-ip');
 const geoip = require('geoip-lite');
-const pk = require("../package.json");
+const chalk = require('chalk');
 
 
 class Tools {
@@ -41,18 +41,32 @@ class Tools {
   }
 
   static getHeader(){
-    return `
-               8I                                        I8    ,dPYb,                   I8
-               8I                                        I8    IP''Yb                   I8
-               8I                                     88888888 I8  8I                88888888
-               8I                                        I8    I8  8'                   I8
-         ,gggg,8I    ,ggggg,     ,ggg,,ggg,    ,ggg,     I8    I8 dPgg,     ,gggg,gg    I8
-        dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,  i8" "8i    I8    I8dP" "8I   dP"  "Y8I    I8
-       i8'    ,8I  i8'    ,8I   I8   8I   8I  I8, ,8I   ,I8,   I8P    I8  i8'    ,8I   ,I8,
-      ,d8,   ,d8b,,d8,   ,d8'  ,dP   8I   Yb, 'YbadP'  ,d88b, ,d8     I8,,d8,   ,d8b, ,d88b,
-      P"Y8888P"'Y8P"Y8888P"    8P'   8I   'Y8888P"Y88888P""Y8888P     'Y8P"Y8888P"'Y888P""Y88  v${pk.version}
-      `
+
+    let header = [
+      "",
+      "    ██████╗  ██████╗ ███╗   ██╗███████╗████████╗██╗  ██╗ █████╗ ████████╗",
+      "    ██╔══██╗██╔═══██╗████╗  ██║██╔════╝╚══██╔══╝██║  ██║██╔══██╗╚══██╔══╝",
+      "    ██║  ██║██║   ██║██╔██╗ ██║█████╗     ██║   ███████║███████║   ██║",
+      "    ██║  ██║██║   ██║██║╚██╗██║██╔══╝     ██║   ██╔══██║██╔══██║   ██║",
+      "    ██████╔╝╚██████╔╝██║ ╚████║███████╗   ██║   ██║  ██║██║  ██║   ██║",
+      "    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝",
+      ""
+    ].map( function(line){
+      return line + new Array( (process.stdout.columns - line.length) +1).join(' ');
+    }).join("");
+
+    //let randomColor = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+    let randomColor = Math.random()*0xFFFFFF<<0;
+    let randomColor2 = 0xFFFFFF - randomColor;
+    let randomColorStr = '#' + randomColor.toString(16);
+    let randomColor2Str = '#' + randomColor2.toString(16);
+
+    return chalk.bgHex(randomColorStr).hex(randomColor2Str)(header);
+
+
   }
+
+
 
 }
 

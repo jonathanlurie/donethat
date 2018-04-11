@@ -17,7 +17,6 @@ class Logger {
   startNewEntry( cbDone ){
     let that = this;
     Tools.clearScreen();
-    console.log(blackSeparator);
     console.log(Tools.getHeader());
     console.log(thinSeparator);
     console.log("Hello, what did you do today?");

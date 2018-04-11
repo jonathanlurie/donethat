@@ -10,6 +10,7 @@ var config = new Config();
 const EntrySelector = require('../src/EntrySelector.js');
 const EntryPrinter = require("../src/EntryPrinter.js");
 
+const pk = require("../package.json");
 
 function printHelp(){
   let help = `
@@ -29,6 +30,8 @@ function printHelp(){
     If no --start is provided, the oldest date available is chosen
 
     Bug or issues: https://github.com/jonathanlurie/donethat
+
+    donethat v${pk.version}
   `
 
   console.log( help );
