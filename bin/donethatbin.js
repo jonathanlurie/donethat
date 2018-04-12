@@ -37,18 +37,24 @@ function printHelp(){
   console.log( help );
 }
 
+function showWrongArgMsg(){
+  console.log();
+  Tools.displayErrorMessage("ERROR: wrong argument format.")
+}
+
+
+// print the header
+Tools.clearScreen();
+console.log(Tools.getHeader());
+
 config.onWorkingDirFetched( function(){
  //console.log( config.getConfigData() );
 
   if( argParser.hasCorruptedArgument() ){
-    console.log("WARN: some argument are not in the expected format");
+    showWrongArgMsg();
     printHelp();
     process.exit();
   }
-
-  // print the header
-  Tools.clearScreen();
-  console.log(Tools.getHeader());
 
   // when no args, just launch the normal 'donethat' logger
   if( argParser.getNumberOfArgs() === 0 ){
@@ -87,8 +93,13 @@ config.onWorkingDirFetched( function(){
     // --tags
     try{
       let tags = argParser.getArgValue("tags");
-      entrySelector.withComaSeparatedTags( tags );
-      somethingToPrint = true;
+      if( tags instanceof Array ){
+        entrySelector.withComaSeparatedTags( tags );
+        somethingToPrint = true;
+      }else{
+        showWrongArgMsg();
+      }
+
     }catch( e ){
       if( !("stillOk" in e) ){
         console.error( e );
@@ -98,8 +109,13 @@ config.onWorkingDirFetched( function(){
     // --last
     try{
       let last = argParser.getArgValue("last");
-      entrySelector.theLastNDays( last );
-      somethingToPrint = true;
+      if( typeof last === 'number'){
+        entrySelector.theLastNDays( last );
+        somethingToPrint = true;
+      }else{
+        showWrongArgMsg();
+      }
+
     }catch( e ){
       if( !("stillOk" in e) ){
         console.error( e );
@@ -107,20 +123,17 @@ config.onWorkingDirFetched( function(){
     }
 
 
-
     // --start
     try{
       let startDate = argParser.getArgValue("start");
 
-      if(!(startDate instanceof Date)){
-        let msg = "ERROR: he start date format is invalid";
-        console.warn(msg);
-        throw msg
+      if( startDate instanceof Date ){
+        entrySelector.starting( startDate );
+        somethingToPrint = true;
+      }else{
+        showWrongArgMsg();
       }
-      console.log("correct date", startDate.toString());
 
-      entrySelector.starting( startDate );
-      somethingToPrint = true;
     }catch( e ){
       if( !("stillOk" in e) ){
         console.error( e );
@@ -133,15 +146,13 @@ config.onWorkingDirFetched( function(){
     try{
       let endDate = argParser.getArgValue("end");
 
-      if(!(endDate instanceof Date)){
-        let msg = "ERROR: he end date format is invalid";
-        console.warn(msg);
-        throw msg
+      if( endDate instanceof Date ){
+        entrySelector.ending( endDate );
+        somethingToPrint = true;
+      }else{
+        showWrongArgMsg();
       }
-      console.log("correct date", endDate.toString());
 
-      entrySelector.ending( endDate );
-      somethingToPrint = true;
     }catch( e ){
       if( !("stillOk" in e) ){
         console.error( e );
@@ -152,8 +163,13 @@ config.onWorkingDirFetched( function(){
     // --location
     try{
       let location = argParser.getArgValue("location");
-      entrySelector.atLocation( location );
-      somethingToPrint = true;
+      if( typeof location === "string"){
+        entrySelector.atLocation( location );
+        somethingToPrint = true;
+      }else{
+        showWrongArgMsg();
+      }
+
     }catch( e ){
       if( !("stillOk" in e) ){
         console.error( e );

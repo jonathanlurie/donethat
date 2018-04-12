@@ -11,6 +11,7 @@ class EntryPrinter  {
 
     if( entries.length === 0){
       console.log("No entry was found :(");
+      console.log();
     }else{
 
       entries.forEach( function(entry, index){
