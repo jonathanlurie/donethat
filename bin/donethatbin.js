@@ -3,7 +3,6 @@
 const ArgParser = require("../src/ArgParser");
 var argParser = new ArgParser();
 
-
 const Config = require("../src/Config.js");
 var config = new Config();
 
@@ -11,6 +10,7 @@ const EntrySelector = require('../src/EntrySelector.js');
 const EntryPrinter = require("../src/EntryPrinter.js");
 
 const pk = require("../package.json");
+const Tools = require("../src/Tools.js")
 
 function printHelp(){
   let help = `
@@ -45,6 +45,10 @@ config.onWorkingDirFetched( function(){
     printHelp();
     process.exit();
   }
+
+  // print the header
+  Tools.clearScreen();
+  console.log(Tools.getHeader());
 
   // when no args, just launch the normal 'donethat' logger
   if( argParser.getNumberOfArgs() === 0 ){

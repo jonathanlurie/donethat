@@ -2,7 +2,7 @@ const readline = require('readline');
 
 class Prompter {
 
-  static multiline( callbackDone, exitStr=':q', promptStr='░░░ '){
+  static multiline( callbackDone, exitStr=':q', promptStr='░░ '){
     let rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -36,7 +36,7 @@ class Prompter {
   }
 
 
-  static monoline( callbackDone, promptStr='░░░ '){
+  static monoline( callbackDone, promptStr='░░ '){
     let rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,

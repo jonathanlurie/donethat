@@ -12,8 +12,6 @@ class EntryPrinter  {
     if( entries.length === 0){
       console.log("No entry was found :(");
     }else{
-      Tools.clearScreen();
-      console.log( Tools.getHeader() );
 
       entries.forEach( function(entry, index){
         console.log( blackSeparator.substring(0, blackSeparator.length - index.toString().length - 1) + " " + index );

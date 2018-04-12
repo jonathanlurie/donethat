@@ -18,7 +18,7 @@ class ArgParser {
 
     var argz = process.argv
 
-    for(var i=0; i<argz.length; i++){
+    for(var i=2; i<argz.length; i++){
         var arg = argz[i];
         var match = rgx.exec(arg);
 

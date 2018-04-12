@@ -107,12 +107,10 @@ class EntrySelector {
     }
 
 
-    // TODO: ArgParse is messed up when arg is a date
     // select entries only newer than such date
     if( this._startDate ){
       entriesPaths = entriesPaths.filter( function( logPath ){
         let timestamp = parseInt(path.basename( logPath, '.json' ));
-        console.log(timestamp ,+that._startDate );
         return timestamp >= (+that._startDate);
       })
     }
