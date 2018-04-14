@@ -23,6 +23,7 @@ function printHelp(){
     --start=mm/dd/yyyy  print entries since since date
     --end=mm/dd/yyyy    print entries up to this date
     --location=paris    print entries with a match of word for location
+    --config=/path/     defines the directory to save your data (absolute path)
     --help              print this help menu
 
     The different options can be combined.
@@ -74,7 +75,12 @@ config.onWorkingDirFetched( function(){
       if( !("stillOk" in e) ){
         console.error( e );
       }
+    }
 
+    try{
+      let all = argParser.getArgValue("config");
+      defineWorkingDir()
+    }catch( e ){
     }
 
 
@@ -93,7 +99,7 @@ config.onWorkingDirFetched( function(){
     // --tags
     try{
       let tags = argParser.getArgValue("tags");
-      if( tags instanceof Array ){
+      if( typeof tags === 'string' ){
         entrySelector.withComaSeparatedTags( tags );
         somethingToPrint = true;
       }else{
@@ -191,5 +197,40 @@ config.onWorkingDirFetched( function(){
 
   }
 });
+
+
+config.onWorkingDirMissing( defineWorkingDir )
+
+
+function defineWorkingDir( ){
+  // when no arg is done
+  if( argParser.getNumberOfArgs() === 0 ){
+    console.log("First time using donethat?")
+    console.log("Define your saving directory with")
+    Tools.displayErrorMessage("donethat --config=/some/absolute/path")
+    console.log()
+    process.exit();
+  }
+
+  try{
+    let workingdir = argParser.getArgValue("config");
+    if( typeof workingdir === 'string'){
+      config.defineWorkingFolder( workingdir )
+    }else{
+      throw {message: 'The saving directory must be a valid string.', stillOk: true}
+    }
+
+  }catch( e ){
+    //console.log( e );
+    if('stillOk' in e){
+      Tools.displayErrorMessage( e.message + '\n');
+    }
+    console.log("Define your saving directory with")
+    Tools.displayOkMessage("donethat --config=/some/absolute/path")
+    console.log()
+
+  }
+  process.exit();
+}
 
 config.fetchWorkingDir()

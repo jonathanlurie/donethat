@@ -72,6 +72,11 @@ class Tools {
     console.log( colorMsg );
   }
 
+  static displayOkMessage( msg ){
+    let colorMsg = chalk.bgHex("00AA00").hex("#FFFFFF")(msg);
+    console.log( colorMsg );
+  }
+
 }
 
 

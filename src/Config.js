@@ -3,7 +3,7 @@ const path = require('path');
 const jsonfile = require('jsonfile');
 const homedir = require('homedir');
 const Prompter = require("./Prompter.js");
-
+const Tools = require("./Tools.js");
 
 let trials = 0;
 let trialMax = 3;
@@ -13,6 +13,7 @@ class Config {
   constructor( ){
     this._configFilePath = path.resolve( homedir(), ".donethat.json");
     this._cbOnWorkingDirFetched = null;
+    this._cbOnWorkingDirMissing = null;
     this._configData = { workingDir: null }
   }
 
@@ -31,39 +32,26 @@ class Config {
     }
 
     if( !workingDir ){
-      console.log("Where do you want to store your DoneThat data?");
-      this._askForWorkingFolder( this._cbOnWorkingDirFetched )
+      this._cbOnWorkingDirMissing();
       return;
     }
   }
 
 
   /**
-   * [PRIVATE]
-   * Displays a prompt so that the user can type the path of the working directory.
-   * This is supposed to happen only if the config file was not found
-   * @param  {Function} cbDone - callback for when the user is done typing
+   * Defines the working folder (place to save data)
+   * @param  {Function} path - a valid absolute path
    */
-  _askForWorkingFolder( cbDone ){
-    let that = this;
-    Prompter.monoline( function( result ){
-      if(fs.existsSync( result )){
-        trials = 0;
-        that._workingDir = result;
-        that._configData.workingDir = result;
-        that._configData.tagFile = "tags.json";
-        that._writeConfigData()
-        cbDone( result )
-      }else{
-        trials ++;
-        if( trials < trialMax ){
-          console.log("The folder should exist, please retry.");
-          that._askForWorkingFolder( cbDone );
-        }else{
-          process.exit();
-        }
-      }
-    })
+  defineWorkingFolder( path ){
+    if(fs.existsSync( path )){
+      this._workingDir = path;
+      this._configData.workingDir = path;
+      this._configData.tagFile = "tags.json";
+      this._writeConfigData();
+      Tools.displayOkMessage("Saving directory succesfully set to " + path);
+    }else{
+      throw {message: 'The directory doe not exist', stillOk: true}
+    }
   }
 
 
@@ -82,6 +70,15 @@ class Config {
    */
   onWorkingDirFetched( cb ) {
     this._cbOnWorkingDirFetched = cb;
+  }
+
+
+  /**
+   * Specify a callback for when the working folder is missing
+   * @param  {Function} cb - the callback
+   */
+  onWorkingDirMissing( cb ) {
+    this._cbOnWorkingDirMissing = cb;
   }
 
 
