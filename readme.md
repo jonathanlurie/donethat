@@ -5,13 +5,13 @@ As developers, the tool we use the most is the terminal and as developers, we so
 Every new record with save the main message, the date, time and timezone and the geographical location (as "city, region, country")
 
 Writing a new entry:  
-![](images/snap1.png)
+![](https://github.com/jonathanlurie/donethat/raw/master/images/snap1.png)
 
 Display a subset of the entries. Here, `-last=1` shows only entries from 1 day ago:
-![](images/snap2.png)
+![](https://github.com/jonathanlurie/donethat/raw/master/images/snap2.png)
 
 The help menu:
-![](images/snap3.png)
+![](https://github.com/jonathanlurie/donethat/raw/master/images/snap3.png)
 
 As shown on the help menu, we can display all the entries even written or a subset of them, using different options that we can combine:
 ```
